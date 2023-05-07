@@ -1,3 +1,5 @@
+
+import '../style/App.css';
 const AppHeader = () => 
 {
 

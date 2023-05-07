@@ -2,7 +2,7 @@
 Boggle Game for 2nd Interview W/ CSNW. 
 
 
-## Brainstorming 
+## Brainstorming (5/6/2023)
 
 
 -Okay so we want to implement a version of Boggle in Javascript. 
@@ -38,3 +38,16 @@ nodes.
 -if the remaining letters is empty, thus we've found all of the letters. then put the word into a list vector
 -then if colored. We've already been here so return . 
 -then when we bubble up, uncolor the node. 
+
+
+## Brainstorming (5/7/2023)
+
+Goals for today: 
+
+-Create a basic React front end, get recursive algo implemented. 
+
+Thoughts: 
+
+
+-If we have more time on Monday Lets create a server with Node.js and Express so we can save and load the results of our games. 
+
