@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 function App() {
 
 
-  const [historys, setHistory] = useState(["hello"]); 
+  const [historys, setHistory] = useState([]); 
   const [showHistory, setShowHistory] = useState(false); 
   let startup = true; 
 
@@ -81,14 +81,14 @@ function App() {
 
   }
 
-//{showHistory ? <History current_history = {historys}/> : <> <h2>No Available Game History</h2></>}
+
 
 
   return(
     <div className ="app">
       <Header/>
       <Game onSaveHistory ={ addToHistory }/>
-      
+      {showHistory ? <History current_history = {historys}/> : <> <h2>No Available Game History</h2></>}
     </div>
   )
 

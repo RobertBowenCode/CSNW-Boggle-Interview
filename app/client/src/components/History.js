@@ -5,9 +5,7 @@ import GameHistoryComponent from './GameHistoryComponent'
 export default function History(current_history){
 
 
-console.log(current_history)
-
-const listItems = current_history.map( (history, key) =>//create list of potential words
+const listItems = current_history["current_history"]?.map( (history, key) =>//create list of potential words
 <GameHistoryComponent 
  matrix = {history["board"]}
  words= {history["words"]}
