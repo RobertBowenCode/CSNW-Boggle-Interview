@@ -1,6 +1,37 @@
 # CSNW-Boggle-Interview
 Boggle Game for 2nd Interview W/ CSNW. 
 
+## Instructions To Run
+
+1. Navigate to '.\CSNW-Boggle-Interview\app\server' directory
+2. Run ```node index.js``` to start the server
+3. Then navigate to the '.\CSNW-Boggle-Interview\app\client\src' directory
+4. Run ``` npm start ``` to start the client
+5. open up 'http://localhost:3000/' in browser to see Boggle App
+6. if interested in api open 'http://localhost:1234/api/historys' to see game history. 
+
+## Tools I used to create this project
+
+1. JS
+2. React JS
+3. Node.js
+4. Express
+5. Postman
+6. Git
+7. Google Chrome
+8. bash
+
+## Known Bugs
+
+1. problems with keys not being unique when displaying Game History, not sure how to fix this I tried using array.map function to add unique keys but it doesn't seem to work. 
+
+## Resources I used
+
+https://docs.google.com/document/d/1_N9MzZ52NQFkX8R44RDsOUYpmuzquuemsHaMyXoow0M/edit?usp=sharing
+
+
+
+##My thought process if this interests you
 
 ## Brainstorming (5/6/2023)
 
@@ -59,3 +90,11 @@ I created the frontend and implemented the algorithm.
 For Monday I need to first finish up the part where is will reset the game properly when we want to play a new game and show everything correctly
 Then once I've gotten this part done if I have free time I can create a server with Node and Express to be able and save previous games progress
 through posting and getting. Shouldn't be too hard. 
+
+##5/8/2023 Thoughts
+-Finished functionality for resetting the game, this was pretty easy
+-fixed small errors (ex: words smaller than 3 being able to be added) and cleaned up how program was organized
+-Had extra time so moved onto creating backend with Node and Express
+-added a Game History component, api for keeping track of game history, connected the two and wrote 
+callback functions so we can add to the history from the Game component. 
+-finished up writing readme details. DONE! 
