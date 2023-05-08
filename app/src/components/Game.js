@@ -15,11 +15,15 @@ export default function Game()
     const [wordList, setWordList] = useState([]); 
     const [showResults, setShowResults] = useState(false); //bool for checking if to render results
 
+    //Result State
+    const [FoundWords, setFoundWords] = useState([]);
+    const [notFoundWords, setNotFoundWords] = useState([]); 
 
-    let found_words = []
-    let not_found_words = []
-    
-    global.paint_map = Array.from({length: n},()=> Array.from({length: n}, () => false))
+
+
+
+
+  
 
     //State change function handlers. 
     const handleMatrixFill = (row, column, event) => {
@@ -94,6 +98,13 @@ export default function Game()
         console.log(result)
     }; 
 
+    const handleResults = (found_words, not_found_words) =>{
+
+        setFoundWords(found_words)
+        setNotFoundWords(not_found_words); 
+        setShowResults(true); 
+
+    }
 
 
 
@@ -134,7 +145,10 @@ export default function Game()
          }
 
 
-         {global.finished_game ? <>Results</>: <>Have To Wait for Game to finish</>}
+         {global.finished_game ? <ResultComponent 
+            include = {FoundWords}
+            excluded= {notFoundWords}
+         />: <></>}
 
 
 
@@ -143,6 +157,54 @@ export default function Game()
         </>
 
     ); 
+
+
+
+}
+
+function PlayBoggle(boggle_board, words, updateResults)
+{
+    words.array.forEach(word => {
+
+         let entrance = word.charAt(0); 
+
+         for(let i = 0; i < 4; i++)
+         {
+            for(let j = 0; j < 4; j++)
+            {
+                if(entrance == boggle_board[i][j])
+                { //we found an entrance in the boggle board to start searching 
+                    global.paint_map = Array.from({length: n},()=> Array.from({length: n}, () => false)) //get a fresh unpainted map
+                    recursivelyFindAllWords(word, word, i, j, boggle_board) //recursively search if it can be found
+                    global.finish_traversal = false; 
+                }
+
+            }
+
+         }
+        
+        
+
+    });
+
+    //handle game finished
+    global.finished_game = true; 
+
+    let found_words = global.found_words;
+    let not_found_words = words
+
+     found_words.forEach(
+
+        (word) =>
+        {
+            not_found_words = not_found_words.filter((e) => e!== word);
+
+        }
+
+
+     )
+
+     updateResults(found_words, not_found_words); 
 
 
 
@@ -164,7 +226,7 @@ function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
     //base case
     if(remaining.length == 0)
     { //if we've traversed 2d array and have gotten to each word
-        global.found_words.push(words); 
+        global.found_words.push(word); 
     }
 
   
@@ -174,7 +236,7 @@ function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
     { //we're out of bounds 
         return; 
     }
-    else if(paint_map[row][col])
+    else if(global.paint_map[row][col])
     { //we've been here already
         return; 
     }
@@ -239,7 +301,48 @@ function checkInBounds(row, col)
 
 
 
+const ResultComponent = ({included, excluded})=>
+{
 
+
+    const included_words = included.map( (word, key)=>   <ListComponent 
+    word = {word}
+    onRemove= {null}
+    key = {key}
+   /> )
+
+   const not_included_words = excluded.map( (word, key)=>   <ListComponent 
+    word = {word}
+    onRemove= {null}
+    key = {key}
+   /> )
+
+   return(
+
+    <div>
+        <div>
+            <h3>
+                Found Words
+            </h3>
+            {included_words}
+
+        </div>
+
+        <div>
+            <h3>
+                Missed Words
+            </h3>
+            {not_included_words}
+
+        </div>
+       
+
+
+    </div>
+
+   ); 
+
+}
 
 
 
@@ -292,7 +395,7 @@ const ListComponent = ({word, onRemove, my_key}) => {
 
         <div className = "list_item" key = {my_key}>
             {word}
-            <button key = {my_key} onClick={ ()=> {onRemove(word)}}>Remove</button>;
+            { onRemove!=null ? <button key = {my_key} onClick={ ()=> {onRemove(word)}}>Remove</button> : <></>};
 
         </div>
 
