@@ -16,7 +16,7 @@ function App() {
   const [showHistory, setShowHistory] = useState(false); 
   let startup = true; 
 
-  useEffect(() => {
+  useEffect(() => { //fetch history on startup
     if(startup)
     {
       fetch('/api/historys').then(res => res.json()).then(new_history =>{
@@ -27,7 +27,7 @@ function App() {
   } 
   }, []);
 
-  useEffect (() => {
+  useEffect (() => { //on history changing check if we should show the history
 
     if(historys.length > 0)
     {
@@ -42,7 +42,7 @@ function App() {
 
 
   const addToHistory = (board, found_words, words) =>
-  {
+  { //post to the api
 
    
     const new_history = {
@@ -68,11 +68,7 @@ function App() {
 
     })
 
-    
-
-    //update state
-
-    console.log(historys)
+  
     setHistory( [ // with a new array
     ...historys, // that contains all the old items
     new_history // and one new item at the end
@@ -88,7 +84,10 @@ function App() {
     <div className ="app">
       <Header/>
       <Game onSaveHistory ={ addToHistory }/>
-      {showHistory ? <History current_history = {historys}/> : <> <h2>No Available Game History</h2></>}
+      {showHistory ? 
+      <History current_history = {historys}/> 
+      : 
+      <> <h2>No Available Game History</h2></>}
     </div>
   )
 

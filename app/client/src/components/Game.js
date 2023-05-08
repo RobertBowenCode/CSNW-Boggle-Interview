@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-
 import '../style/Game.css';
 import './global.js';
 import WordListComponent from './WordListComponent';
@@ -79,9 +78,9 @@ export default function Game({onSaveHistory})
         list_copy = list_copy.filter(e => e !== word); // avoid duplicates
         if(word != null)
         { //check if we have a valid input
-            if(word.length > 0)
+            if(word.length > 2)
             {
-                list_copy.push(word) //add the word to the list
+                list_copy.push(word) //add the word to the list if it's atleast 3 letters long
                 
 
             }
@@ -100,18 +99,14 @@ export default function Game({onSaveHistory})
         let list_copy = wordList; 
         let result = list_copy.filter(e => e !== word); // return the other words. 
         setWordList(result)
-        console.log(result)
+
     }; 
 
 
     const handleResults = (found_words) =>{
 
-        console.log("this is the found words")
-        console.log("found words")
-
         setFoundWords(found_words)
 
-        
     }
 
 
@@ -148,53 +143,53 @@ export default function Game({onSaveHistory})
         Current Game
        </h4>
 
-       <div className = "game_interface">
+        <div className = "game_interface">
 
-        <WordBoardComponent
-            onFill ={handleMatrixFill }
-            matrix ={wordMatrix}
-         />
+            <WordBoardComponent
+                onFill ={handleMatrixFill }
+                matrix ={wordMatrix}
+            />
 
-         <WordListComponent
-            wordList ={wordList}
-            onAdd ={handleListAddition}
-            onRemove ={handleListRemoval}
-         />
-
-
-         { //only display play button if we can play
-            canPlay ? 
-            <button onClick = { ()=> {
-                
-                
-                PlayBoggle(wordMatrix, wordList, handleResults)
-        
-        }}>Play Boggle!</button > :
-            <h4> Please add some words and fill in the word board to play Boggle</h4>
-         }
+            <WordListComponent
+                wordList ={wordList}
+                onAdd ={handleListAddition}
+                onRemove ={handleListRemoval}
+            />
 
 
-         {showResults ? <ResultComponent 
-            found_words = {FoundWords}
-            all_words= {wordList}
-         />: <></>}
+            { //only display play button if we can play
+                canPlay ? 
+                <button onClick = { ()=> {
+                    
+                    
+                    PlayBoggle(wordMatrix, wordList, handleResults)
+            
+            }}>Play Boggle!</button > :
+                <h4> Please add some words and fill in the word board to play Boggle</h4>
+            }
 
 
-       {showResults ? <button onClick = { ()=> {   
+            {showResults ? <ResultComponent 
+                found_words = {FoundWords}
+                all_words= {wordList}
+            />: <></>}
 
-        resetGame(setShowResults, setCanPlay, setWordList, setFoundWords, setIsFilled, setMatrix); 
-        
-        }}>Play Another Game!</button > : <></>}
 
-        
-       {showResults ? <button onClick = { ()=> {   
+        {showResults ? <button onClick = { ()=> {   
 
-            onSaveHistory(wordMatrix, FoundWords, wordList)
             resetGame(setShowResults, setCanPlay, setWordList, setFoundWords, setIsFilled, setMatrix); 
-}}>Save This Game!</button > : <></>}
+            
+            }}>Play Another Game!</button > : <></>}
+
+            
+        {showResults ? <button onClick = { ()=> {   
+
+                onSaveHistory(wordMatrix, FoundWords, wordList)
+                resetGame(setShowResults, setCanPlay, setWordList, setFoundWords, setIsFilled, setMatrix); 
+            }}>Save This Game!</button > : <></>}
 
 
-        </div>
+            </div>
     
         </>
 
@@ -205,26 +200,19 @@ export default function Game({onSaveHistory})
 }
 
 function resetGame(resetShowResults, resetCanPlay, resetWordList, resetFoundWords, resetIsFilled, resetMatrix)
-{
+{ //reset all of the values
+
     resetShowResults(false); 
     resetCanPlay(false)
     resetWordList([])
     resetFoundWords([])
     resetIsFilled(false)
     resetMatrix(Array.from({length: global.board_size},()=> Array.from({length: global.board_size}, () => null)))
-
 }
 
-
-function saveGame()
-{
- //will call hook passed by upper layer
-
-
-}
 
 function PlayBoggle(boggle_board, words, updateResults)
-{
+{ 
 
     global.found_words = [];
 

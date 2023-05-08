@@ -1,9 +1,12 @@
 const express = require('express'); 
 const app = express(); 
-app.use(express.json())
 const cors = require('cors');
 
-app.use(cors({
+
+app.use(express.json())
+
+
+app.use(cors({ //allows us to communicate to client
     origin: 'http://localhost:3000'
 }));
 
@@ -28,12 +31,9 @@ app.post('/api/historys', (req, res) =>{
 
     if(!req.body.board || req.body.board.length ==0 || !req.body.words || req.body.words.length < 0 || !req.body.found_words)
     { //handle invalid input
-        res.status(400).send("Bad Input"); 
-       console.log(req.body); 
+       res.status(400).send("Bad Input"); 
        return; 
     }
-
-    console.log(req.body); 
 
     const history = {
 
