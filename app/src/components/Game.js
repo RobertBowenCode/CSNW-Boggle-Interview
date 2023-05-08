@@ -2,7 +2,11 @@
 import { useState, useEffect } from 'react';
 
 import '../style/Game.css';
-import './global.js'
+import './global.js';
+import WordListComponent from './WordListComponent';
+import WordBoardComponent from './WordBoardComponent'; 
+import ResultComponent from './ResultComponent'; 
+
 
 export default function Game()
 {
@@ -10,13 +14,14 @@ export default function Game()
   
     let n = global.board_size
     const [wordMatrix, setMatrix] = useState(Array.from({length: n},()=> Array.from({length: n}, () => null)));    //should create an empty 4 by 4 array.
-    const [isFilled, setIsFilled] = useState(false);                                                                 //boolean to check that the array is full
+    const [isFilled, setIsFilled] = useState(false);                                                               //boolean to check that the array is full
 
-    const [wordList, setWordList] = useState([]); 
+    const [wordList, setWordList] = useState([]); //list of words
     const [showResults, setShowResults] = useState(false); //bool for checking if to render results
+    const [canPlay, setCanPlay] = useState(false); //bool for checking if can play
 
     //Result State
-    const [FoundWords, setFoundWords] = useState([]);
+    const [FoundWords, setFoundWords] = useState([]); //list of founds words in the boggle game
 
 
 
@@ -60,8 +65,6 @@ export default function Game()
 
         setIsFilled(isFilled)
 
-        console.log(copy);
-        console.log(isFilled); 
     };
 
 
@@ -76,13 +79,13 @@ export default function Game()
             if(word.length > 0)
             {
                 list_copy.push(word) //add the word to the list
-                setWordList(list_copy)
-                console.log(list_copy)
+                
+
             }
 
         }
 
-     
+        setWordList(list_copy)
      
 
 
@@ -114,11 +117,23 @@ export default function Game()
 
         if(wordList.length > 0)
         {
-            console.log("setting show results to true")
-            console.log(FoundWords)
+
             setShowResults(true);
         }  
     }, [FoundWords])
+
+
+    useEffect(() => {
+
+        if(wordList.length > 0 && isFilled)
+        { //if the word list is larger than 0 and the board is filled
+
+            setCanPlay(true);
+        }  
+        else{
+            setCanPlay(false); 
+        }
+    }, [wordList, isFilled])
 
 
 
@@ -145,7 +160,7 @@ export default function Game()
 
 
          { //only display play button if we can play
-            isFilled && wordList.length >0 ? 
+            canPlay ? 
             <button onClick = { ()=> {
                 
                 
@@ -175,6 +190,17 @@ export default function Game()
 
 
 
+function ResetGame(){
+
+
+}
+
+function saveGame()
+{
+
+
+    
+}
 
 function PlayBoggle(boggle_board, words, updateResults)
 {
@@ -189,10 +215,17 @@ function PlayBoggle(boggle_board, words, updateResults)
          {
             for(let j = 0; j < 4; j++)
             {
-                if(entrance == boggle_board[i][j])
+                if(entrance === boggle_board[i][j])
                 { //we found an entrance in the boggle board to start searching 
                     global.paint_map = Array.from({length: global.board_size},()=> Array.from({length: global.board_size}, () => false)) //get a fresh unpainted map
                     recursivelyFindAllWords(word, word, i, j, boggle_board) //recursively search if it can be found
+
+                    if(global.finish_traversal == true)
+                    {//avoid repeatedly finding the same word at different entrances. 
+                        j = 4; 
+                        i = 4; 
+                    }
+
                     global.finish_traversal = false; 
                 }
 
@@ -231,8 +264,8 @@ function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
     
 
     //base case
-    if(remaining.length == 0)
-    { //if we've traversed 2d array and have gotten to each word
+    if(remaining.length === 0)
+    { //if we've traversed 2d array and have gotten to each letter
         global.finish_traversal = true; 
         global.found_words.push(word); 
     }
@@ -250,7 +283,7 @@ function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
     }
 
     
-    if(boggle_board[row][col] == remaining.charAt(0))
+    if(boggle_board[row][col] === remaining.charAt(0))
     { //we found the next spot!
 
         global.paint_map[row][col] = true; 
@@ -266,7 +299,7 @@ function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
 
         recursivelyFindAllWords(word,  new_remaining, row, col+1, boggle_board) //square right
 
-        recursivelyFindAllWords(word,  new_remaining, row-1, col-1, boggle_board) //upper left corner
+        recursivelyFindAllWords(word,  new_remaining, row-1, col-1, boggle_board) //upper left 
 
         recursivelyFindAllWords(word,  new_remaining, row+1, col+1, boggle_board) //lower right
 
@@ -307,190 +340,5 @@ function checkInBounds(row, col)
     return true
 }
 
-
-
-
-const ResultComponent = ({found_words, all_words})=>
-{
-
-    
-    let not_found_words = all_words
-
-    found_words?.forEach(
-
-       (word) =>
-       {
-           not_found_words = not_found_words.filter((e) => e!== word);
-
-       }
-
-
-    )
-
-    
-    const listItems = found_words?.map( (word, key) =>//create list of potential words
-           <ListComponent 
-            word = {word}
-            onRemove= {null}
-            key = {key}
-           />
-); 
-
-
-
-    const included_words = found_words.map( (word, key)=>   
-    <ListComponent 
-    word = {word}
-    onRemove= {null}
-    key = {key}
-   /> )
-
-
-
-   const not_included_words = not_found_words.map( (word, key)=>   
-   <ListComponent 
-    word = {word}
-    onRemove= {null}
-    key = {key}
-   /> )
-
-   return(
-
-    <div>
-        <div>
-            <h3 className='found'>
-                Found Words
-            </h3>
-            <ul>{included_words}</ul>
-            
-
-        </div>
-
-        <div>
-            <h3 className='not_found'>
-                Missed Words
-            </h3>
-            <ul> {not_included_words} </ul>
-            
-
-        </div>
-       
-
-
-    </div>
-
-   ); 
-
-}
-
-
-
-
-
-
-//
-
-
-const WordBoardComponent = ({onFill,  matrix})=>
-{ //this is going to display a board and have functions that will change the state of 2d array in Game component 
-
-    return(
-    <div className="Board">
-        <h3>
-            Word Board
-        </h3>
-        <table>
-            <tbody>
-            {matrix.map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                    {row.map((column, columnIndex) => (
-                        <td key={columnIndex}>
-                        <input
-                        type="text"
-                        onChange={(e) => onFill(rowIndex, columnIndex, e)}
-                        value={matrix[rowIndex][columnIndex] == null ? '' : matrix[rowIndex][columnIndex]  }
-                        />
-                        </td>
-                    ))}
-                </tr>
-                ))}
-            </tbody>
-        </table>
-
-        <div className="caption">
-        <h5>Fill Me In!</h5>
-        </div>
-
-    </div>
-    ); 
-
-
-}
-
-
-const ListComponent = ({word, onRemove, my_key}) => {
-
-    return(
-
-        <div className = "list_item" key = {my_key}>
-            {word}
-            { onRemove!=null ? <button key = {my_key} onClick={ ()=> {onRemove(word)}}>Remove</button> : <></>};
-
-        </div>
-
-    )
-}
-
-const WordListComponent = ({wordList, onAdd, onRemove}) => {
-
-    
-    const [chosenWord, setChosenWord] = useState(''); 
-
-   
-    const listItems = wordList.map( (word, key) =>//create list of potential words
-           <ListComponent 
-            word = {word}
-            onRemove= {onRemove}
-            key = {key}
-           />
-); 
-
-
-   return(
-    <div>
-
-            {wordList.length ==0 ? <h5> You haven't added any words!</h5> : <h5>Your Chosen Words</h5>}
-  
-        <div className="item_list"> 
-
-        
-       <ul>  {listItems} </ul>
-
-       </div>
-
-       <input
-        type="text"
-        onChange={(e)=>{ setChosenWord(e.target.value)}}
-        value = {chosenWord}
-        />
-        <button onClick={ ()=>{
-            //submit the chosen word to the list and reset
-            onAdd(chosenWord); 
-            setChosenWord(''); 
-        }
-            
-            }>Add Word</button>;
-
-
-    </div>
-   ); 
-
-
-
-}
-
-const results = () =>{
-
-}
 
 
