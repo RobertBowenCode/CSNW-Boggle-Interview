@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 
 import '../style/Game.css';
 import './global.js'
@@ -17,7 +17,6 @@ export default function Game()
 
     //Result State
     const [FoundWords, setFoundWords] = useState([]);
-    const [notFoundWords, setNotFoundWords] = useState([]); 
 
 
 
@@ -98,14 +97,28 @@ export default function Game()
         console.log(result)
     }; 
 
-    const handleResults = (found_words, not_found_words) =>{
+
+    const handleResults = (found_words) =>{
+
+        console.log("this is the found words")
+        console.log("found words")
 
         setFoundWords(found_words)
-        setNotFoundWords(not_found_words); 
-        setShowResults(true); 
 
+        
     }
 
+
+    
+    useEffect(() => {
+
+        if(wordList.length > 0)
+        {
+            console.log("setting show results to true")
+            console.log(FoundWords)
+            setShowResults(true);
+        }  
+    }, [FoundWords])
 
 
 
@@ -136,18 +149,16 @@ export default function Game()
             <button onClick = { ()=> {
                 
                 
-                console.log("tried playing")
-                console.log(wordList)
-                console.log(wordMatrix)
+                PlayBoggle(wordMatrix, wordList, handleResults)
         
         }}>Play Boggle!</button > :
             <h4> Please add some words and fill in the word board to play Boggle</h4>
          }
 
 
-         {global.finished_game ? <ResultComponent 
-            include = {FoundWords}
-            excluded= {notFoundWords}
+         {showResults ? <ResultComponent 
+            found_words = {FoundWords}
+            all_words= {wordList}
          />: <></>}
 
 
@@ -162,9 +173,15 @@ export default function Game()
 
 }
 
+
+
+
 function PlayBoggle(boggle_board, words, updateResults)
 {
-    words.array.forEach(word => {
+
+    global.found_words = [];
+
+    words.forEach(word => {
 
          let entrance = word.charAt(0); 
 
@@ -174,7 +191,7 @@ function PlayBoggle(boggle_board, words, updateResults)
             {
                 if(entrance == boggle_board[i][j])
                 { //we found an entrance in the boggle board to start searching 
-                    global.paint_map = Array.from({length: n},()=> Array.from({length: n}, () => false)) //get a fresh unpainted map
+                    global.paint_map = Array.from({length: global.board_size},()=> Array.from({length: global.board_size}, () => false)) //get a fresh unpainted map
                     recursivelyFindAllWords(word, word, i, j, boggle_board) //recursively search if it can be found
                     global.finish_traversal = false; 
                 }
@@ -188,23 +205,12 @@ function PlayBoggle(boggle_board, words, updateResults)
     });
 
     //handle game finished
-    global.finished_game = true; 
+   
 
     let found_words = global.found_words;
-    let not_found_words = words
-
-     found_words.forEach(
-
-        (word) =>
-        {
-            not_found_words = not_found_words.filter((e) => e!== word);
-
-        }
 
 
-     )
-
-     updateResults(found_words, not_found_words); 
+     updateResults(found_words); 
 
 
 
@@ -216,6 +222,7 @@ function PlayBoggle(boggle_board, words, updateResults)
 function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
 {
 
+
     if(global.finish_traversal)
     { //we have finished this current word traversal
         return; //just return we're done
@@ -226,6 +233,7 @@ function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
     //base case
     if(remaining.length == 0)
     { //if we've traversed 2d array and have gotten to each word
+        global.finish_traversal = true; 
         global.found_words.push(word); 
     }
 
@@ -241,12 +249,11 @@ function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
         return; 
     }
 
-
     
-    if(boggle_board[row][col] == remaining.char(0))
+    if(boggle_board[row][col] == remaining.charAt(0))
     { //we found the next spot!
 
-        global.painted_map[row][col] = true; 
+        global.paint_map[row][col] = true; 
 
         //try all of the other directions
         let new_remaining = remaining.substring(1); //get remaining letters we need to find
@@ -279,39 +286,69 @@ function checkInBounds(row, col)
 
     if(row < 0)
     {
-
+        return false 
     }
     else if(row >= global.board_size)
     {
-
+        return false
 
     } else if (col < 0)
     {
-
+        return false
 
     }
     else if ( col >= global.board_size)
     {
-
+        return false
 
     }
 
+
+    return true
 }
 
 
 
 
-const ResultComponent = ({included, excluded})=>
+const ResultComponent = ({found_words, all_words})=>
 {
 
+    
+    let not_found_words = all_words
 
-    const included_words = included.map( (word, key)=>   <ListComponent 
+    found_words?.forEach(
+
+       (word) =>
+       {
+           not_found_words = not_found_words.filter((e) => e!== word);
+
+       }
+
+
+    )
+
+    
+    const listItems = found_words?.map( (word, key) =>//create list of potential words
+           <ListComponent 
+            word = {word}
+            onRemove= {null}
+            key = {key}
+           />
+); 
+
+
+
+    const included_words = found_words.map( (word, key)=>   
+    <ListComponent 
     word = {word}
     onRemove= {null}
     key = {key}
    /> )
 
-   const not_included_words = excluded.map( (word, key)=>   <ListComponent 
+
+
+   const not_included_words = not_found_words.map( (word, key)=>   
+   <ListComponent 
     word = {word}
     onRemove= {null}
     key = {key}
@@ -321,18 +358,20 @@ const ResultComponent = ({included, excluded})=>
 
     <div>
         <div>
-            <h3>
+            <h3 className='found'>
                 Found Words
             </h3>
-            {included_words}
+            <ul>{included_words}</ul>
+            
 
         </div>
 
         <div>
-            <h3>
+            <h3 className='not_found'>
                 Missed Words
             </h3>
-            {not_included_words}
+            <ul> {not_included_words} </ul>
+            
 
         </div>
        

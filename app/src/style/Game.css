@@ -5,3 +5,15 @@
     padding: 10px;
     text-align: justify;
   }
+
+
+.found{
+
+    color:green
+
+}
+
+.not_found {
+    color:red
+
+}
