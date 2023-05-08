@@ -8,9 +8,13 @@ export default function Game()
     const [wordMatrix, setMatrix] = useState(Array.from({length: n},()=> Array.from({length: n}, () => null)));    //should create an empty 4 by 4 array.
     const [isFilled, setIsFilled] = useState(false);                                                                 //boolean to check that the array is full
 
-    const[wordList, setWordList] = useState(Array());  //here is 
-    const [didPlay, setDidPlay] = useState(false); 
+    const [wordList, setWordList] = useState([]);  //empty array of words we'd like to test
+    const [showResults, setShowResults] = useState(false); //bool for checking if to render results
 
+
+    let found_words = []
+    let not_found_words = []
+    
     const handleMatrixFill = (row, column, event) => {
 
         let result = event.target.value.replace(/[^-a-z]/ig,''); //get rid of any non alphabet letters
@@ -51,6 +55,26 @@ export default function Game()
     };
 
 
+    const handleListAddition = (event) =>
+    {
+        let word = event.target.value.replace(/[^-a-z]/ig,'');
+        let list_copy = wordList; 
+
+        if(word != null)
+        { //check if we have a valid input
+            if(word.length > 0)
+            {
+                list_copy = list_copy.push(word) //add the word to the list
+
+            }
+
+        }
+
+
+
+    }
+
+
 
 
 
@@ -63,9 +87,13 @@ export default function Game()
        </h4>
 
        <div className = "game_interface">
-        <WordBoard 
+        <WordBoardComponent
             onFill ={handleMatrixFill }
             matrix ={wordMatrix}
+         />
+         <WordListComponent
+            onAdd = {handleListAddition}
+            list = {wordList}
          />
 
         </div>
@@ -79,7 +107,7 @@ export default function Game()
 }
 
 
-const WordBoard= ({onFill,  matrix})=>
+const WordBoardComponent= ({onFill,  matrix})=>
 { //this is going to display a board and have functions that will change the state of 2d array in Game component 
 
     return(
@@ -114,7 +142,7 @@ const WordBoard= ({onFill,  matrix})=>
 }
 
 
-const WordList = (list, onAdd) =>{
+const WordListComponent = (list, onAdd) =>{
 
 
 
@@ -124,7 +152,7 @@ const WordList = (list, onAdd) =>{
 const results = () =>{
 
 
-    
+
 }
 
 
