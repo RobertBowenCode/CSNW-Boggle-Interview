@@ -33,6 +33,7 @@ export default function Game()
     const handleMatrixFill = (row, column, event) => {
 
         let result = event.target.value.replace(/[^-a-z]/ig,''); //get rid of any non alphabet letters
+        result = result.toLowerCase(); 
 
         if(result.length>1)
         {
@@ -71,9 +72,11 @@ export default function Game()
     const handleListAddition = (word) => {
     
     
-        word = word.replace(/[^-a-z]/ig,'');
-        let list_copy = wordList; 
+        word = word.replace(/[^-a-z]/ig,''); //only Letters!
+        word = word.toLowerCase(); 
 
+        let list_copy = wordList; 
+        list_copy = list_copy.filter(e => e !== word); // avoid duplicates
         if(word != null)
         { //check if we have a valid input
             if(word.length > 0)
@@ -254,7 +257,7 @@ function PlayBoggle(boggle_board, words, updateResults)
 //Algorithm is O(m*n), where m is largest word in the list and n is the number of words. 
 function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
 {
-//NOTTTEEEE NEED TO CHANGE SO IT DOE SLOWER CASESSSSE MAKE SURE TO DO THIS!!!!
+
 
     if(global.finish_traversal)
     { //we have finished this current word traversal
