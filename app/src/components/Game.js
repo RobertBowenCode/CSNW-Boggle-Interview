@@ -8,7 +8,7 @@ export default function Game()
     const [wordMatrix, setMatrix] = useState(Array.from({length: n},()=> Array.from({length: n}, () => null)));    //should create an empty 4 by 4 array.
     const [isFilled, setIsFilled] = useState(false);                                                                 //boolean to check that the array is full
 
-    const [wordList, setWordList] = useState(["value1","value2"]); 
+    const [wordList, setWordList] = useState([]); 
     const [showResults, setShowResults] = useState(false); //bool for checking if to render results
 
 
@@ -158,13 +158,13 @@ const WordBoardComponent = ({onFill,  matrix})=>
 }
 
 
-const ListComponent = ({word, onRemove}) => {
+const ListComponent = ({word, onRemove, my_key}) => {
 
     return(
 
-        <div className = "list_item">
+        <div className = "list_item" key = {my_key}>
             {word}
-            <button onClick={ ()=> {onRemove(word)}}>Remove</button>;
+            <button key = {my_key} onClick={ ()=> {onRemove(word)}}>Remove</button>;
 
         </div>
 
@@ -177,10 +177,11 @@ const WordListComponent = ({wordList, onAdd, onRemove}) => {
     const [chosenWord, setChosenWord] = useState(''); 
 
    
-    const listItems = wordList.map( (word) =>//create list of potential words
+    const listItems = wordList.map( (word, key) =>//create list of potential words
            <ListComponent 
             word = {word}
             onRemove= {onRemove}
+            key = {key}
            />
 ); 
 
