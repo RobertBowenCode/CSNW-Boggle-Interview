@@ -3,7 +3,7 @@ import './style/App.css';
 import Header from "./components/AppHeader"
 import Game from "./components/Game"
 import History from './components/History'
-import axios from "axios"
+
 import { useState, useEffect } from 'react';
 
 
@@ -12,21 +12,24 @@ import { useState, useEffect } from 'react';
 function App() {
 
 
-  const [historys, setHistory] = useState([]); 
+  const [historys, setHistory] = useState(["hello"]); 
   const [showHistory, setShowHistory] = useState(false); 
-
+  let startup = true; 
 
   useEffect(() => {
-    fetch('/api/historys').then(res => res.json()).then(new_history =>{
-
-      setHistory({new_history: new_history}); 
-      console.log(new_history); 
-    }); 
+    if(startup)
+    {
+      fetch('/api/historys').then(res => res.json()).then(new_history =>{
+        setHistory(new_history); 
+   
+      });
+      startup = false; 
+  } 
   }, []);
 
   useEffect (() => {
 
-    if(showHistory.length > 0)
+    if(historys.length > 0)
     {
       setShowHistory(true); 
     }
@@ -43,16 +46,20 @@ function App() {
 
    
     const new_history = {
-      "board" : board, 
+     
       "words" : words, 
       "found_words" : found_words,
-    }
+      "board" : board,
+
+        }
 
     fetch('http://localhost:1234/api/historys', 
     {
+      mode: 'cors',
       method: 'POST', 
       headers: {'Content-Type': 'application/json'}, 
       body: JSON.stringify(new_history), 
+    
 
     }).then( ()=> 
     {
@@ -61,23 +68,27 @@ function App() {
 
     })
 
+    
 
     //update state
-    let history_copy = historys; 
-    history_copy.push(new_history); 
-    setHistory(history_copy); 
+
+    console.log(historys)
+    setHistory( [ // with a new array
+    ...historys, // that contains all the old items
+    new_history // and one new item at the end
+  ]); 
 
 
   }
 
-
+//{showHistory ? <History current_history = {historys}/> : <> <h2>No Available Game History</h2></>}
 
 
   return(
     <div className ="app">
       <Header/>
-      <Game onSaveHistory ={addToHistory}/>
-      {showHistory ? <History current_history = {historys}/> : <> <h2>No Available Game History</h2></>}
+      <Game onSaveHistory ={ addToHistory }/>
+      
     </div>
   )
 

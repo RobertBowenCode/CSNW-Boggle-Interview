@@ -8,7 +8,7 @@ import WordBoardComponent from './WordBoardComponent';
 import ResultComponent from './ResultComponent'; 
 
 
-export default function Game(onSaveHistory)
+export default function Game({onSaveHistory})
 {
 
   
@@ -185,6 +185,13 @@ export default function Game(onSaveHistory)
         resetGame(setShowResults, setCanPlay, setWordList, setFoundWords, setIsFilled, setMatrix); 
         
         }}>Play Another Game!</button > : <></>}
+
+        
+       {showResults ? <button onClick = { ()=> {   
+
+            onSaveHistory(wordMatrix, FoundWords, wordList)
+            resetGame(setShowResults, setCanPlay, setWordList, setFoundWords, setIsFilled, setMatrix); 
+}}>Save This Game!</button > : <></>}
 
 
         </div>
