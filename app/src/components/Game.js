@@ -139,6 +139,18 @@ export default function Game()
     }, [wordList, isFilled])
 
 
+    useEffect(() => {
+        //on reseting the board
+        if(showResults == false)
+        {
+           
+            console.log("trying to reset board")
+        }
+        
+
+    }, [showResults])
+
+
 
     return(
         <>
@@ -180,6 +192,12 @@ export default function Game()
          />: <></>}
 
 
+       {showResults ? <button onClick = { ()=> {   
+
+        resetGame(setShowResults, setCanPlay, setWordList, setFoundWords, setIsFilled, setMatrix); 
+        
+        }}>Play Another Game!</button > : <></>}
+
 
         </div>
     
@@ -191,16 +209,21 @@ export default function Game()
 
 }
 
-
-
-function ResetGame(){
-
+function resetGame(resetShowResults, resetCanPlay, resetWordList, resetFoundWords, resetIsFilled, resetMatrix)
+{
+    resetShowResults(false); 
+    resetCanPlay(false)
+    resetWordList([])
+    resetFoundWords([])
+    resetIsFilled(false)
+    resetMatrix(Array.from({length: global.board_size},()=> Array.from({length: global.board_size}, () => null)))
 
 }
 
+
 function saveGame()
 {
-
+ //will call hook passed by upper layer
 
 
 }
