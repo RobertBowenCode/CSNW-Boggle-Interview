@@ -1,10 +1,14 @@
 
 import { useState } from "react";
+
 import '../style/Game.css';
+import './global.js'
+
 export default function Game()
 {
 
-    let n = 4
+  
+    let n = global.board_size
     const [wordMatrix, setMatrix] = useState(Array.from({length: n},()=> Array.from({length: n}, () => null)));    //should create an empty 4 by 4 array.
     const [isFilled, setIsFilled] = useState(false);                                                                 //boolean to check that the array is full
 
@@ -15,6 +19,7 @@ export default function Game()
     let found_words = []
     let not_found_words = []
     
+    global.paint_map = Array.from({length: n},()=> Array.from({length: n}, () => false))
 
     //State change function handlers. 
     const handleMatrixFill = (row, column, event) => {
@@ -119,6 +124,7 @@ export default function Game()
             isFilled && wordList.length >0 ? 
             <button onClick = { ()=> {
                 
+                
                 console.log("tried playing")
                 console.log(wordList)
                 console.log(wordMatrix)
@@ -126,6 +132,11 @@ export default function Game()
         }}>Play Boggle!</button > :
             <h4> Please add some words and fill in the word board to play Boggle</h4>
          }
+
+
+         {global.finished_game ? <>Results</>: <>Have To Wait for Game to finish</>}
+
+
 
         </div>
     
@@ -136,6 +147,103 @@ export default function Game()
 
 
 }
+
+
+
+//Algorithm is O(m*n), where m is largest word in the list and n is the number of words. 
+function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
+{
+
+    if(global.finish_traversal)
+    { //we have finished this current word traversal
+        return; //just return we're done
+        
+    }
+    
+
+    //base case
+    if(remaining.length == 0)
+    { //if we've traversed 2d array and have gotten to each word
+        global.found_words.push(words); 
+    }
+
+  
+
+   //Edge Case Checking
+    if(checkInBounds(row,col) == false  )
+    { //we're out of bounds 
+        return; 
+    }
+    else if(paint_map[row][col])
+    { //we've been here already
+        return; 
+    }
+
+
+    
+    if(boggle_board[row][col] == remaining.char(0))
+    { //we found the next spot!
+
+        global.painted_map[row][col] = true; 
+
+        //try all of the other directions
+        let new_remaining = remaining.substring(1); //get remaining letters we need to find
+
+        recursivelyFindAllWords(word,  new_remaining, row-1, col, boggle_board) //square above
+
+        recursivelyFindAllWords(word,  new_remaining, row+1, col, boggle_board) //square below
+
+        recursivelyFindAllWords(word,  new_remaining, row, col-1, boggle_board) //square left
+
+        recursivelyFindAllWords(word,  new_remaining, row, col+1, boggle_board) //square right
+
+        recursivelyFindAllWords(word,  new_remaining, row-1, col-1, boggle_board) //upper left corner
+
+        recursivelyFindAllWords(word,  new_remaining, row+1, col+1, boggle_board) //lower right
+
+        recursivelyFindAllWords(word,  new_remaining, row+1, col-1, boggle_board) //lower left
+
+        recursivelyFindAllWords(word,  new_remaining, row-1, col+1, boggle_board) //upper right
+
+
+    }
+
+
+}
+
+
+function checkInBounds(row, col)
+{
+
+    if(row < 0)
+    {
+
+    }
+    else if(row >= global.board_size)
+    {
+
+
+    } else if (col < 0)
+    {
+
+
+    }
+    else if ( col >= global.board_size)
+    {
+
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
 
 
 //
