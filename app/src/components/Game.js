@@ -15,6 +15,8 @@ export default function Game()
     let found_words = []
     let not_found_words = []
     
+
+    //State change function handlers. 
     const handleMatrixFill = (row, column, event) => {
 
         let result = event.target.value.replace(/[^-a-z]/ig,''); //get rid of any non alphabet letters
@@ -112,6 +114,19 @@ export default function Game()
             onRemove ={handleListRemoval}
          />
 
+
+         { //only display play button if we can play
+            isFilled && wordList.length >0 ? 
+            <button onClick = { ()=> {
+                
+                console.log("tried playing")
+                console.log(wordList)
+                console.log(wordMatrix)
+        
+        }}>Play Boggle!</button > :
+            <h4> Please add some words and fill in the word board to play Boggle</h4>
+         }
+
         </div>
     
         </>
@@ -123,12 +138,17 @@ export default function Game()
 }
 
 
+//
+
+
 const WordBoardComponent = ({onFill,  matrix})=>
 { //this is going to display a board and have functions that will change the state of 2d array in Game component 
 
     return(
     <div className="Board">
-        
+        <h3>
+            Word Board
+        </h3>
         <table>
             <tbody>
             {matrix.map((row, rowIndex) => (
@@ -188,9 +208,9 @@ const WordListComponent = ({wordList, onAdd, onRemove}) => {
 
    return(
     <div>
-        <h5>    
-            Your Chosen Words!
-        </h5>
+
+            {wordList.length ==0 ? <h5> You haven't added any words!</h5> : <h5>Your Chosen Words</h5>}
+  
         <div className="item_list"> 
 
         
@@ -220,8 +240,6 @@ const WordListComponent = ({wordList, onAdd, onRemove}) => {
 }
 
 const results = () =>{
-
-
 
 }
 
