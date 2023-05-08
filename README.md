@@ -31,7 +31,7 @@ https://docs.google.com/document/d/1_N9MzZ52NQFkX8R44RDsOUYpmuzquuemsHaMyXoow0M/
 
 
 
-##My thought process if this interests you
+## My thought process if this interests you
 
 ## Brainstorming (5/6/2023)
 
@@ -91,7 +91,7 @@ For Monday I need to first finish up the part where is will reset the game prope
 Then once I've gotten this part done if I have free time I can create a server with Node and Express to be able and save previous games progress
 through posting and getting. Shouldn't be too hard. 
 
-##5/8/2023 Thoughts
+## (5/8/2023) Thoughts
 -Finished functionality for resetting the game, this was pretty easy
 -fixed small errors (ex: words smaller than 3 being able to be added) and cleaned up how program was organized
 -Had extra time so moved onto creating backend with Node and Express
