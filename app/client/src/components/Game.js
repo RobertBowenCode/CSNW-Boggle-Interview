@@ -8,7 +8,7 @@ import WordBoardComponent from './WordBoardComponent';
 import ResultComponent from './ResultComponent'; 
 
 
-export default function Game()
+export default function Game(onSaveHistory)
 {
 
   
