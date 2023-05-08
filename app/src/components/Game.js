@@ -199,7 +199,7 @@ function saveGame()
 {
 
 
-    
+
 }
 
 function PlayBoggle(boggle_board, words, updateResults)
@@ -254,7 +254,7 @@ function PlayBoggle(boggle_board, words, updateResults)
 //Algorithm is O(m*n), where m is largest word in the list and n is the number of words. 
 function recursivelyFindAllWords(word, remaining, row , col, boggle_board)
 {
-
+//NOTTTEEEE NEED TO CHANGE SO IT DOE SLOWER CASESSSSE MAKE SURE TO DO THIS!!!!
 
     if(global.finish_traversal)
     { //we have finished this current word traversal

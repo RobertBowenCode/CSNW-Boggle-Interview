@@ -51,3 +51,11 @@ Thoughts:
 
 -If we have more time on Monday Lets create a server with Node.js and Express so we can save and load the results of our games. 
 
+
+
+## End Of Day Thoughts  (5/7/2023)
+
+I created the frontend and implemented the algorithm. 
+For Monday I need to first finish up the part where is will reset the game properly when we want to play a new game and show everything correctly
+Then once I've gotten this part done if I have free time I can create a server with Node and Express to be able and save previous games progress
+through posting and getting. Shouldn't be too hard. 
