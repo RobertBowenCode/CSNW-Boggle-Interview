@@ -67,7 +67,7 @@ export default function Game()
             {
                 list_copy.push(word) //add the word to the list
                 setWordList(list_copy)
-                console.log(wordList)
+                console.log(list_copy)
             }
 
         }
@@ -82,8 +82,9 @@ export default function Game()
 
 
         let list_copy = wordList; 
-        list_copy.filter(e => e !== word); // return the other words. 
-        setWordList(list_copy)
+        let result = list_copy.filter(e => e !== word); // return the other words. 
+        setWordList(result)
+        console.log(result)
     }; 
 
 
@@ -179,7 +180,7 @@ const WordListComponent = ({wordList, onAdd, onRemove}) => {
     const listItems = wordList.map( (word) =>//create list of potential words
            <ListComponent 
             word = {word}
-            onRemove= { onRemove}
+            onRemove= {onRemove}
            />
 ); 
 
