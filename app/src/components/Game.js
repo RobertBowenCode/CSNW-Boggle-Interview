@@ -139,18 +139,6 @@ export default function Game()
     }, [wordList, isFilled])
 
 
-    useEffect(() => {
-        //on reseting the board
-        if(showResults == false)
-        {
-           
-            console.log("trying to reset board")
-        }
-        
-
-    }, [showResults])
-
-
 
     return(
         <>
