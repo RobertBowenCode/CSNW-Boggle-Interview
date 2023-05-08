@@ -4,7 +4,7 @@ const AppHeader = () =>
 {
 
   return(
-  <div class = "header">
+  <div className = "header">
 
     <h1>Robert Bowen</h1>
 
@@ -15,11 +15,11 @@ const AppHeader = () =>
 
     </h3>
 
-    <body>Given a 4x4 matrix of letters chosen randomly from A-Z (with replacement), 
+    <div>Given a 4x4 matrix of letters chosen randomly from A-Z (with replacement), 
     and a list L of English words (you can use any words you’d like); 
     write a program to output all the words present in the matrix per the rules of Boggle.
     Your program should be able to accept pre-set 4x4 matrices and word lists in a reasonable (text-based) format of your choosing.
-    </body>
+    </div>
 
   </div>
   ); 
